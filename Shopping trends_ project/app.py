@@ -17,13 +17,59 @@ st.set_page_config(
 st.markdown("""
 <style>
 .stApp {
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 40%, #334155 100%);
-    color: white;
+    background: linear-gradient(
+        135deg,
+        #fdfbff 0%,
+        #eef2ff 35%,
+        #e0f2fe 70%,
+        #f0fdf4 100%
+    );
+    color: #1e293b;
+}
+h1, h2, h3, p, label {
+    color: #1e293b !important;
+}
+/* Input Boxes */
+div[data-baseweb="input"] > div {
+    background: white !important;
+    border: 1px solid #dbeafe !important;
+    border-radius: 12px !important;
+    box-shadow: 0 2px 8px rgba(59,130,246,0.08);
 }
 
-h1, h2, h3, p, label {
-    color: white !important;
+div[data-baseweb="input"] input {
+    color: #1e293b !important;
 }
+
+/* Dropdowns */
+div[data-baseweb="select"] > div {
+    background: white !important;
+    border: 1px solid #dbeafe !important;
+    border-radius: 12px !important;
+    box-shadow: 0 2px 8px rgba(59,130,246,0.08);
+}
+
+/* Labels */
+label {
+    color: #334155 !important;
+    font-weight: 600 !important;
+}
+
+/* Slider */
+.stSlider {
+    background: rgba(255,255,255,0.8);
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid #dbeafe;
+    box-shadow: 0 2px 8px rgba(59,130,246,0.08);
+}
+
+/* Number Input */
+[data-testid="stNumberInput"] {
+    background: white;
+    padding: 8px;
+    border-radius: 12px;
+}           
 
 [data-testid="stMetric"] {
     background: rgba(255,255,255,0.08);
@@ -32,14 +78,42 @@ h1, h2, h3, p, label {
     backdrop-filter: blur(10px);
 }
 
+/* Predict Button */
 .stButton > button {
     width: 100%;
     height: 55px;
     border-radius: 14px;
+    border: none;
     font-size: 18px;
-    font-weight: bold;
-    background: linear-gradient(90deg,#6366f1,#22c55e);
+    font-weight: 600;
+    background: linear-gradient(90deg,#4f46e5,#7c3aed);
     color: white;
+    box-shadow: 0 6px 18px rgba(124,58,237,0.25);
+    transition: all 0.3s ease;
+}
+
+.stButton > button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(124,58,237,0.35);
+}
+
+/* Download Button */
+.stDownloadButton > button {
+    width: 100%;
+    height: 55px;
+    border-radius: 14px;
+    border: none;
+    font-size: 18px;
+    font-weight: 600;
+    background: linear-gradient(90deg,#06b6d4,#3b82f6);
+    color: white;
+    box-shadow: 0 6px 18px rgba(59,130,246,0.25);
+    transition: all 0.3s ease;
+}
+
+.stDownloadButton > button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(59,130,246,0.35);
 }
 </style>
 """, unsafe_allow_html=True)
@@ -86,17 +160,50 @@ feature_names = joblib.load("Artifacts/Models/feature_names.pkl")
 # ---------------- HEADER ----------------
 st.title("🛍️ Smart Customer Subscription Predictor")
 st.markdown("### AI Dashboard for Customer Behavior & Insights")
-
 # ---------------- METRICS ----------------
 col1, col2, col3, col4 = st.columns(4)
+card_style = """
+padding:22px;
+border-radius:20px;
+background:rgba(255,255,255,0.85);
+border:1px solid rgba(255,255,255,0.6);
+backdrop-filter:blur(10px);
+box-shadow:0 10px 25px rgba(15,23,42,0.08);
+color:#1e293b;
+text-align:center;
+"""
+
 with col1:
-    st.metric("👥 Customers", "3900")
+    st.markdown(f"""
+    <div style="{card_style} border-top:4px solid #60a5fa;">
+        <h4>👥 Customers</h4>
+        <h2>3900</h2>
+    </div>
+    """, unsafe_allow_html=True)
+
 with col2:
-    st.metric("📊 Features", "19")
+    st.markdown(f"""
+    <div style="{card_style} border-top:4px solid #818cf8;">
+        <h4>📊 Features</h4>
+        <h2>19</h2>
+    </div>
+    """, unsafe_allow_html=True)
+
 with col3:
-    st.metric("🤖 Model", "Logistic")
+    st.markdown(f"""
+    <div style="{card_style} border-top:4px solid #2dd4bf;">
+        <h4>🤖 Model</h4>
+        <h2>Logistic</h2>
+    </div>
+    """, unsafe_allow_html=True)
+
 with col4:
-    st.metric("✅ Status", "Ready")
+    st.markdown(f"""
+    <div style="{card_style} border-top:4px solid #4ade80;">
+        <h4>✅ Status</h4>
+        <h2>Ready</h2>
+    </div>
+    """, unsafe_allow_html=True)
 
 # ---------------- INPUT ----------------
 st.subheader("👤 Customer Information")
@@ -222,9 +329,9 @@ if st.button("🔮 Predict Customer Behavior"):
         color=["#3b82f6", "#22c55e", "#f97316"]
     )
 
-    fig.patch.set_facecolor("#0f172a")
-    ax.set_facecolor("#0f172a")
-    ax.tick_params(colors="white")
+    fig.patch.set_facecolor("#ffffff")
+    ax.set_facecolor("#ffffff")
+    ax.tick_params(colors="#334155")
 
     st.pyplot(fig)
 
@@ -241,14 +348,19 @@ if st.button("🔮 Predict Customer Behavior"):
     fig2 = plt.figure(figsize=(3.5, 3.5))
     ax2 = plt.subplot(111, polar=True)
 
-    ax2.plot(angles, values, color="cyan", linewidth=2)
-    ax2.fill(angles, values, color="cyan", alpha=0.2)
+    # Purple theme matching button
+    ax2.plot(angles, values, color="#7c3aed", linewidth=2)
+    ax2.fill(angles, values, color="#7c3aed", alpha=0.2)
 
     ax2.set_xticks(angles[:-1])
-    ax2.set_xticklabels(labels, color="white", fontsize=9)
+    ax2.set_xticklabels(labels, color="#334155", fontsize=9)
 
-    fig2.patch.set_facecolor("#0f172a")
-    ax2.set_facecolor("#0f172a")
+    # Light theme background
+    fig2.patch.set_facecolor("#ffffff")
+    ax2.set_facecolor("#ffffff")
+
+    # Grid color
+    ax2.grid(color="#cbd5e1")
 
     st.pyplot(fig2)
 
@@ -276,4 +388,14 @@ if st.button("🔮 Predict Customer Behavior"):
         report.to_csv(index=False),
         file_name="customer_report.csv",
         mime="text/csv"
+    )
+st.markdown("---")
+
+st.markdown(
+     """
+    <div style='text-align:center; color:#64748b; padding:10px;'>
+    Developed by Greena | AI Customer Intelligence Dashboard 🚀
+    </div>
+    """,
+    unsafe_allow_html=True
     )
